@@ -15,6 +15,7 @@ function fireWeapon () {
     
     weapon.reset(player.x + WEAPONS[currentWeapon].offset + 15, player.y + WEAPONS[currentWeapon].offset);
     weapon.body.velocity.x = WEAPONS[currentWeapon].velocity;
+    weapon.damage = WEAPONS[currentWeapon].damage;
     weaponTimer = game.time.now + WEAPONS[currentWeapon].timer;
 }
 function switchWeapon (){

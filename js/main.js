@@ -20,6 +20,9 @@ function preload () {
     game.load.image('enemy','../assets/img/enemy.png');
     game.load.image('enemy2','../assets/img/enemy2.png');
 
+    // Load animations
+    game.load.spritesheet('smallboom','../assets/img/explosion.png', 64, 64);
+
     // Load audio files for later use 
     game.load.audio ('music','../assets/audio/Shadelike.mp3');
     game.load.audio ('pewpew','../assets/audio/laser.ogg','../assets/audio/laser.mp3');
@@ -38,6 +41,7 @@ function create () {
     music.play();
     pewpew = game.add.audio('pewpew',0.1);
     launch = game.add.audio('launch',0.1);
+    boom = game.add.audio('explosion',1);
 
     // Create the player, place it in the world and give it life
     player = game.add.sprite(100, 250,'player');
@@ -59,6 +63,15 @@ function create () {
     createGroup(enemies,'enemy',50);
 
 
+    // Create explosions
+    explosions = game.add.group();
+    explosions.createMultiple(10, 'smallboom');
+    explosions.setAll('anchor.x',0);
+    explosions.setAll('anchor.y',0);
+    explosions.forEach(function(explosion){
+    explosion.animations.add('smallboom');
+    });
+
     // Add keyboard controls
     cursors = game.input.keyboard.createCursorKeys(); // arrow keys
     game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
@@ -66,6 +79,9 @@ function create () {
     // Add Score and HP Text to the screen
     hpText = game.add.text(GAME_WIDTH - 150, 20,'HP: ' + player.life.toString(),{fill: '#fff'});
     scoreText = game.add.text(GAME_WIDTH - 150, GAME_HEIGHT - 50, 'Score: ' + player.score.toString(), {fill: '#fff'});
+
+    // Create enemies in a loop
+    game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemy);
 }
 
 function update () {
@@ -94,4 +110,35 @@ function update () {
     if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
         switchWeapon();
     }
+
+    // Define my desired collisions
+    game.physics.arcade.overlap(player, enemies, hurtPlayer);
+    game.physics.arcade.overlap(enemies, lasers, hurtEnemy);
+    game.physics.arcade.overlap(enemies, missles, hurtEnemy);
+}
+
+function hurtPlayer (player, enemy) {
+    console.log('OW');
+    boom.play();
+
+    makeExplosion(player);
+
+    // Logic
+    enemy.kill();
+    player.life -= ENEMY_DAMAGE;
+    hpText.text ='HP: ' + player.life.toString();
+
+    if(player.life <= 0){
+        player.kill();
+        // TODO gameover
+    }
+    if(player.life <= 50){
+        player.tint = '0xff0000';
+    }
+}
+
+function makeExplosion (token) {
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(token.body.x,token.body.y);
+    explosion.play('smallboom');
 }
