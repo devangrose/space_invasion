@@ -27,7 +27,7 @@ function preload () {
     game.load.audio ('music','../assets/audio/Shadelike.mp3');
     game.load.audio ('pewpew','../assets/audio/laser.ogg','../assets/audio/laser.mp3');
     game.load.audio ('launch','../assets/audio/Missile.mp3');
-    game.load.audio ('explosion','../assets/audio/explosion.ogg','../assets/audio/explosion.mp3');
+    game.load.audio ('boom','../assets/audio/explosion.ogg','../assets/audio/explosion.mp3');
 }
 
 function create () {
@@ -65,7 +65,7 @@ function create () {
 
     // Create explosions
     explosions = game.add.group();
-    explosions.createMultiple(10, 'smallboom');
+    explosions.createMultiple(20, 'smallboom');
     explosions.setAll('anchor.x',0);
     explosions.setAll('anchor.y',0);
     explosions.forEach(function(explosion){
@@ -118,7 +118,6 @@ function update () {
 }
 
 function hurtPlayer (player, enemy) {
-    console.log('OW');
     boom.play();
 
     makeExplosion(player);
@@ -140,5 +139,5 @@ function hurtPlayer (player, enemy) {
 function makeExplosion (token) {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(token.body.x,token.body.y);
-    explosion.play('smallboom');
+    explosion.play('smallboom', 50, false, true);
 }

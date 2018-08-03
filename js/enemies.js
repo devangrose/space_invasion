@@ -13,5 +13,8 @@ function hurtEnemy (enemy, weapon){
         enemy.kill();
         player.score += 10;
         scoreText.text = 'Score: ' + player.score;
+        if(player.score % 100 == 0){
+            ENEMY_HEALTH += 10;
+        }
     }
 }
