@@ -129,7 +129,7 @@ function hurtPlayer (player, enemy) {
 
     if(player.life <= 0){
         player.kill();
-        // TODO gameover
+        gameOver();
     }
     if(player.life <= 50){
         player.tint = '0xff0000';
@@ -140,4 +140,17 @@ function makeExplosion (token) {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(token.body.x,token.body.y);
     explosion.play('smallboom', 50, false, true);
+}
+
+function gameOver (){
+    console.log('game over');
+    music.pause();
+    swal({
+        title: 'You suck!',
+        text: 'Thanks for playing',
+        type: 'warning',
+        showCancelButton: false,
+        confirmButtonText: 'Cool',
+        closeOnConfirm: true
+    });
 }

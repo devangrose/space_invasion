@@ -36,3 +36,5 @@ function createGroup (group, imageName, maxNum) {
     group.setAll('outOfBoundsKill',true);
     group.setAll('checkWorldBounds',true);
 }
+
+
